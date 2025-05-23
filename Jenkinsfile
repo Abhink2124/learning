@@ -3,19 +3,29 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh 'python3 --version'  // Python version check
-                sh 'pip3 install -r requirements.txt || true'  // Dependencies (if any)
+                sh '''
+                python3 -m venv venv
+                . venv/bin/activate
+                pip install --upgrade pip
+                pip install -r requirements.txt || true
+                '''
             }
         }
         stage('Test') {
             steps {
-                sh 'python3 test_app.py'  // Run tests
+                sh '''
+                . venv/bin/activate
+                python3 test_app.py
+                '''
             }
         }
         stage('Deploy') {
             steps {
-                sh 'python3 app.py > output.txt'  // Run app and save output
-                sh 'cat output.txt'  // Display output
+                sh '''
+                . venv/bin/activate
+                python3 app.py > output.txt
+                cat output.txt
+                '''
             }
         }
     }
